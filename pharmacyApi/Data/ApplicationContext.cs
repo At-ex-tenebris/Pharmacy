@@ -6,5 +6,11 @@ namespace pharmacyApi.Data {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { 
             //Database.EnsureCreated();
         }
+        public DbSet<Administrator> Administrators { get; set; }
+        public DbSet<Country>       Countries { get; set; }
+        public DbSet<Region>        Regions { get; set; }
+        public DbSet<City>          City { get; set; }
+        public DbSet<Pharmacy>      Pharmacy { get; set; }
+        public DbSet<Medicament>    Medicaments { get; set; }
     }
 }
