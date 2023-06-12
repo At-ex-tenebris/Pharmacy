@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\repos\\_web-applications\\pharmacy\\pharmacyApi\\pharmacyApi.csproj": {}
+    "C:\\Users\\nik-s\\Рабочий стол\\Pharmacy\\pharmacyApi\\pharmacyApi.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\repos\\_web-applications\\pharmacy\\pharmacyApi\\pharmacyApi.csproj": {
+    "C:\\Users\\nik-s\\Рабочий стол\\Pharmacy\\pharmacyApi\\pharmacyApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\repos\\_web-applications\\pharmacy\\pharmacyApi\\pharmacyApi.csproj",
+        "projectUniqueName": "C:\\Users\\nik-s\\Рабочий стол\\Pharmacy\\pharmacyApi\\pharmacyApi.csproj",
         "projectName": "pharmacyApi",
-        "projectPath": "D:\\Projects\\repos\\_web-applications\\pharmacy\\pharmacyApi\\pharmacyApi.csproj",
-        "packagesPath": "C:\\Users\\Mikhaill\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\repos\\_web-applications\\pharmacy\\pharmacyApi\\obj\\",
+        "projectPath": "C:\\Users\\nik-s\\Рабочий стол\\Pharmacy\\pharmacyApi\\pharmacyApi.csproj",
+        "packagesPath": "C:\\Users\\nik-s\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nik-s\\Рабочий стол\\Pharmacy\\pharmacyApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Mikhaill\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\nik-s\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -25,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -105,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
