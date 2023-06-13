@@ -69,7 +69,7 @@ namespace pharmacyApi.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("City");
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("pharmacyApi.Models.Country", b =>
@@ -159,7 +159,7 @@ namespace pharmacyApi.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Pharmacy");
+                    b.ToTable("Pharmacies");
                 });
 
             modelBuilder.Entity("pharmacyApi.Models.Region", b =>

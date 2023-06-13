@@ -6,7 +6,6 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace pharmacyApi.Migrations
 {
     /// <inheritdoc />
-    
     public partial class ModelsAddition : Migration
     {
         /// <inheritdoc />
@@ -64,7 +63,7 @@ namespace pharmacyApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "City",
+                name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -76,9 +75,9 @@ namespace pharmacyApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_City", x => x.Id);
+                    table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_City_Regions_RegionId",
+                        name: "FK_Cities_Regions_RegionId",
                         column: x => x.RegionId,
                         principalTable: "Regions",
                         principalColumn: "Id",
@@ -86,7 +85,7 @@ namespace pharmacyApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pharmacy",
+                name: "Pharmacies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -100,11 +99,11 @@ namespace pharmacyApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pharmacy", x => x.Id);
+                    table.PrimaryKey("PK_Pharmacies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pharmacy_City_CityId",
+                        name: "FK_Pharmacies_Cities_CityId",
                         column: x => x.CityId,
-                        principalTable: "City",
+                        principalTable: "Cities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -124,16 +123,16 @@ namespace pharmacyApi.Migrations
                 {
                     table.PrimaryKey("PK_Medicaments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Medicaments_Pharmacy_PharmacyId",
+                        name: "FK_Medicaments_Pharmacies_PharmacyId",
                         column: x => x.PharmacyId,
-                        principalTable: "Pharmacy",
+                        principalTable: "Pharmacies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_City_RegionId",
-                table: "City",
+                name: "IX_Cities_RegionId",
+                table: "Cities",
                 column: "RegionId");
 
             migrationBuilder.CreateIndex(
@@ -142,8 +141,8 @@ namespace pharmacyApi.Migrations
                 column: "PharmacyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pharmacy_CityId",
-                table: "Pharmacy",
+                name: "IX_Pharmacies_CityId",
+                table: "Pharmacies",
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
@@ -162,10 +161,10 @@ namespace pharmacyApi.Migrations
                 name: "Medicaments");
 
             migrationBuilder.DropTable(
-                name: "Pharmacy");
+                name: "Pharmacies");
 
             migrationBuilder.DropTable(
-                name: "City");
+                name: "Cities");
 
             migrationBuilder.DropTable(
                 name: "Regions");

@@ -11,7 +11,7 @@ using pharmacyApi.Data;
 namespace pharmacyApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230612203504_ModelsAddition")]
+    [Migration("20230613182357_ModelsAddition")]
     partial class ModelsAddition
     {
         /// <inheritdoc />
@@ -72,7 +72,7 @@ namespace pharmacyApi.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("City");
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("pharmacyApi.Models.Country", b =>
@@ -162,7 +162,7 @@ namespace pharmacyApi.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Pharmacy");
+                    b.ToTable("Pharmacies");
                 });
 
             modelBuilder.Entity("pharmacyApi.Models.Region", b =>
