@@ -112,7 +112,8 @@ namespace pharmacyApi.Controllers
             bool selfRedaction = pharmacy == requestPharmacy;
 
             // Проверка валидации медикамента
-            if (!AuthValidation.isValid(db, pharmacy, request.AuthData, authType, selfRedaction))
+            if (!AuthValidation.isValid(db, pharmacy, request.AuthData, authType, selfRedaction) || 
+                !AuthValidation.isValid(db, requestPharmacy, request.AuthData, authType, selfRedaction))
                 return BadRequest(AUTH_INVALID);
 
             // Изменение значений полей экземпляре класса Medicament
