@@ -39,13 +39,12 @@ namespace pharmacyApi.Controllers
         }
 
         [HttpGet("list")]
-        public IActionResult GetList([FromQuery] int countryId = 0, [FromQuery] int regionId = 0, [FromQuery] string cityName = "",
+        public IActionResult GetList( [FromQuery] int regionId = 0, [FromQuery] string cityName = "",
             [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 2)
         {
             var entries = db.Cities.Include(x => x.Region).Where(x => true);
             if (cityName != "") entries = entries.Where(x => x.CityName.Contains(cityName));
             if (regionId != 0) entries = entries.Where(x => x.RegionId == regionId);
-            if (countryId != 0) entries = entries.Where(x => x.Region.CountryId == countryId);
             var fullSize = entries.Count();
             var pagesAmount = fullSize / pageSize + (fullSize % pageSize != 0 ? 1 : 0);
             if (pageNum != 0) entries = entries.Skip(pageSize * (pageNum - 1)).Take(pageSize);
@@ -118,7 +117,7 @@ namespace pharmacyApi.Controllers
             var entryRegion = db.Cities.FirstOrDefault(x => x.Id == entry.RegionId);
             if (entryRegion == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, entryRegion, authData, authType)) return BadRequest(AUTH_FAILED);
-            return Ok(entry);
+            return Ok(FullCity.fromStd(entry));
         }
 
         public class CityRequest
