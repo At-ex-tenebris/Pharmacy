@@ -8,7 +8,7 @@
         public string PharmacyName { get; set; }    //Поле наименования
         public double Latitude { get; set; }        //Поле широты(в градусах)
         public double Longitude { get; set; }       //Поле долготы(в градусах)
-        public City City { get; set; }
+        public City? City { get; set; }
         public int CityId { get; set; }
         public static FullPharmacy FromStd(Pharmacy obj)
         {

@@ -11,7 +11,7 @@ namespace pharmacyApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [EnableCors("CorsAllowAny")]
-    public class PharmacyController : ControllerBase
+    public class PharmaciesController : ControllerBase
     {
         private ApplicationContext db;
         private IConfiguration config;
@@ -20,7 +20,7 @@ namespace pharmacyApi.Controllers
         const string ID_NOT_FOUND = "Запись с заданным индентификатором не найдена";
         const string AUTH_INVALID = "Логин или пароль не проходят авторизацию.";
 
-        public PharmacyController(ApplicationContext db, IConfiguration config)
+        public PharmaciesController(ApplicationContext db, IConfiguration config)
         {
             this.db = db;
             this.config = config;
@@ -37,7 +37,7 @@ namespace pharmacyApi.Controllers
                 return BadRequest(AUTH_INVALID);
             }
             var token = TokenHandler.BuildToken(new string[] { AUTH_ROLE }, config);
-            return Ok(new { token = token, entry = pharmacy });
+            return Ok(new { token = token, entry = FullPharmacy.FromStd(pharmacy) });
         }
 
         [HttpGet("list")]
@@ -56,7 +56,8 @@ namespace pharmacyApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetConcrete([FromRoute] long id)
         {
-            var entry = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region).ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == id);
+            var entry = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region)
+                .ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
             return Ok(entry);
         }
@@ -65,29 +66,27 @@ namespace pharmacyApi.Controllers
         [HttpPost]
         public IActionResult AddEntry([FromBody] PharmacyRequest request, [FromQuery] string authType)
         {
-            var City = db.Cities.FirstOrDefault(x => x.Id == request.fullPharmacy.CityId);
+            var City = db.Cities.Include(x => x.Region).ThenInclude(x => x.Country)
+                .FirstOrDefault(x => x.Id == request.fullPharmacy.CityId);
             if (City == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, City, request.authData, authType)) return BadRequest(AUTH_INVALID);
             var model = Pharmacy.FromFull(request.fullPharmacy);
+            model.Password = PasswordHasher.Hash(model.Password);
             db.Pharmacies.Add(model);
             db.SaveChanges();
             return Ok(model);
         }
 
-        public class PharmacyRequest
-        {
-            public AuthData authData { get; set; }
-            public FullPharmacy fullPharmacy { get; set; }
-        }
-
         [HttpPut("{id}")]
         public IActionResult RedactEntry([FromBody] PharmacyRequest request, [FromRoute] long id, [FromQuery] string authType)
         {
-            var City = db.Cities.FirstOrDefault(x => x.Id == request.fullPharmacy.CityId);
+            var City = db.Cities.Include(x => x.Region).ThenInclude(x => x.Country)
+                .FirstOrDefault(x => x.Id == request.fullPharmacy.CityId);
             if (City == null) return NotFound(ID_NOT_FOUND);
             var entry = db.Pharmacies.FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
-            var entryCity = db.Cities.FirstOrDefault(x => x.Id == entry.CityId);
+            var entryCity = db.Cities.Include(x => x.Region).ThenInclude(x => x.Country)
+                .FirstOrDefault(x => x.Id == entry.CityId);
             if (entryCity == null) return NotFound(ID_NOT_FOUND);
             bool selfRedaction = City == entryCity;
             if (!AuthValidation.isValid(db, City, request.authData, authType, selfRedaction) ||
@@ -108,7 +107,8 @@ namespace pharmacyApi.Controllers
         {
             var entry = db.Pharmacies.FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
-            var City = db.Cities.FirstOrDefault(x => x.Id == entry.CityId);
+            var City = db.Cities.Include(x => x.Region).ThenInclude(x => x.Country)
+                .FirstOrDefault(x => x.Id == entry.CityId);
             if (City == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, City, authData, authType)) return BadRequest(AUTH_INVALID);
             db.Pharmacies.Remove(entry);
@@ -119,13 +119,20 @@ namespace pharmacyApi.Controllers
         [HttpPost("{id}")]
         public IActionResult GetEntry([FromBody] AuthData authData, [FromRoute] long id, [FromQuery] string authType)
         {
-            var entry = db.Pharmacies.FirstOrDefault(x => x.Id == id);
+            var entry = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region)
+                .ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
             var City = db.Cities.FirstOrDefault(x => x.Id == entry.CityId);
             if (City == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, City, authData, authType)) return BadRequest(AUTH_INVALID);
             var fullEntry = FullPharmacy.FromStd(entry);
             return Ok(fullEntry);
+        }
+
+        public class PharmacyRequest
+        {
+            public AuthData authData { get; set; }
+            public FullPharmacy fullPharmacy { get; set; }
         }
     }
 

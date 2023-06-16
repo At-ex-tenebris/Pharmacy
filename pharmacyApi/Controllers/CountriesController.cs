@@ -35,7 +35,7 @@ namespace pharmacyApi.Controllers
             var country = db.Countries.FirstOrDefault(x => x.Login == login && x.Password == password);
             if (country == null) return BadRequest(AUTH_INVALID);
             var token = TokenHandler.BuildToken(new string[] { AUTH_ROLE }, config);
-            return Ok(new { token = token, entry = country });
+            return Ok(new { token = token, entry = FullCountry.FromStd(country) });
         }
         [HttpGet("list")]
         public IActionResult GetList( [FromQuery] string countryName = "",
@@ -64,16 +64,12 @@ namespace pharmacyApi.Controllers
             
             if (!AuthValidation.isValidAdmin(db,  request.authData, authType)) return BadRequest(AUTH_INVALID);
             var model = Country.FromFull(request.fullCountry);
+            model.Password = PasswordHasher.Hash(model.Password);
             db.Countries.Add(model);
             db.SaveChanges();
             return Ok(model);
         }
 
-        public class CountryRequest
-        {
-            public AuthData authData { get; set; }
-            public FullCountry fullCountry { get; set; }
-        }
 
         //[Authorize]
         [HttpPut("{id}")]
@@ -114,6 +110,11 @@ namespace pharmacyApi.Controllers
             if (entry == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValidAdmin(db, authData, authType)) return BadRequest(AUTH_INVALID);
             return Ok(FullCountry.FromStd(entry));
+        }
+        public class CountryRequest
+        {
+            public AuthData authData { get; set; }
+            public FullCountry fullCountry { get; set; }
         }
     }
 }

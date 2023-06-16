@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace pharmacyApi.Models {
     public class Country {
@@ -10,7 +10,7 @@ namespace pharmacyApi.Models {
         public string Password { get; set; } // Поле пароля
         public string CountryName { get; set; } // Название Государства
 
-        public static Country FromStd(FullCountry obj)
+        public static Country FromFull(FullCountry obj)
         {
             return new Country { Id = obj.Id, Login = obj.Login, CountryName = obj.CountryName, Password = obj.Password };
         }
