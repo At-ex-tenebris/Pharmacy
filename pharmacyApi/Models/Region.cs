@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace pharmacyApi.Models {
     public class Region {
@@ -8,7 +8,7 @@ namespace pharmacyApi.Models {
         [JsonIgnore]
         public string Password { get; set; } // пароль 
         public string Name { get; set; } // наименование
-        public Country Country { get; set; } // связь с государством
+        public Country? Country { get; set; } // связь с государством
         public int CountryId { get; set; } // Id гоусдарства
         public static Region FromFull(FullRegion obj)
         {

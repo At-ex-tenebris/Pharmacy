@@ -28,7 +28,7 @@ namespace pharmacyApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("list")]
-        public IActionResult GetList([FromQuery] int pharmacyId = 0, [FromQuery] string strMedicament = "",
+        public IActionResult GetList([FromQuery] int pharmacyId = 0, [FromQuery] string medicamentName = "",
             [FromQuery] int cityId = 0, [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 2)
         {
             // Получение записей таблицы Medicament
@@ -41,8 +41,8 @@ namespace pharmacyApi.Controllers
             if (cityId != 0)
                 entries = entries.Where(x => x.Pharmacy.CityId == cityId);
             // Проверка на отбор по названию
-            if (strMedicament != "")
-                entries = entries.Where(x => x.Name.Contains(strMedicament));
+            if (medicamentName != "")
+                entries = entries.Where(x => x.Name.Contains(medicamentName));
 
             var fullSize = entries.Count();
             var pagesAmount = fullSize / pageSize + (fullSize % pageSize != 0 ? 1 : 0);
@@ -72,7 +72,7 @@ namespace pharmacyApi.Controllers
         /// Метод добавления записи позиции.
         /// </summary>
         [HttpPost]
-        public IActionResult AddEntry([FromBody] RequestMedicament request, [FromQuery] string authType)
+        public IActionResult AddEntry([FromBody] MedicamentRequest request, [FromQuery] string authType)
         {
             var pharmacy = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region).
                 ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == request.Model.PharmacyId);
@@ -93,19 +93,21 @@ namespace pharmacyApi.Controllers
         /// Метод редактирования записи позиции.
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult RedactEntry([FromRoute] int id, [FromBody] RequestMedicament request, [FromQuery] string authType)
+        public IActionResult RedactEntry([FromRoute] int id, [FromBody] MedicamentRequest request, [FromQuery] string authType)
         {
             var entry = db.Medicaments.Include(x => x.Pharmacy).ThenInclude(x => x.City).
                 ThenInclude(x => x.Region).ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == id);
             if (entry == null)
                 return NotFound(ID_NOT_FOUND);
 
-            var pharmacy = db.Pharmacies.FirstOrDefault(x => x.Id == entry.PharmacyId);
+            var pharmacy = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region)
+                .ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == entry.PharmacyId);
             if (pharmacy == null)
                 return BadRequest(NOT_FOUND_PHARMACY);
 
             var model = request.Model;
-            var requestPharmacy = db.Pharmacies.FirstOrDefault(x => x.Id == model.PharmacyId);
+            var requestPharmacy = db.Pharmacies.Include(x => x.City).ThenInclude(x => x.Region)
+                .ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == model.PharmacyId);
             if (requestPharmacy == null)
                 return BadRequest(NOT_FOUND_PHARMACY);
 
@@ -153,7 +155,7 @@ namespace pharmacyApi.Controllers
             return Ok(entry);
         }
 
-        public class RequestMedicament
+        public class MedicamentRequest
         {
             public AuthData AuthData { get; set; }
             public Medicament Model { get; set; }

@@ -12,7 +12,7 @@ namespace pharmacyApi.Controllers
     [Route("api/[controller]")]
     [EnableCors("CorsAllowAny")]
 
-    public class CitiesCotroller : ControllerBase
+    public class CitiesController : ControllerBase
     {
         private ApplicationContext db;
         private IConfiguration config;
@@ -20,7 +20,7 @@ namespace pharmacyApi.Controllers
         const string AUTH_ROLE = "city";
         const string ID_NOT_FOUND = "Запись по введенному идентификатору не найдена.";
 
-        public CitiesCotroller(ApplicationContext context, IConfiguration config)
+        public CitiesController(ApplicationContext context, IConfiguration config)
         {
             this.db = context;
             this.config = config;
@@ -35,7 +35,7 @@ namespace pharmacyApi.Controllers
             if (city == null)
                 return BadRequest(AUTH_FAILED);
             var token = TokenHandler.BuildToken(new string[] { AUTH_ROLE }, config);
-            return Ok(new { token = token, entry = city });
+            return Ok(new { token = token, entry = FullCity.FromStd(city) });
         }
 
         [HttpGet("list")]
@@ -65,7 +65,8 @@ namespace pharmacyApi.Controllers
             var region = db.Regions.Include(x => x.Country).FirstOrDefault(x => x.Id == request.fullCity.RegionId);
             if (region == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, region, request.authData, authType)) return BadRequest(AUTH_FAILED);
-            var model = City.stdFrom(request.fullCity);
+            var model = City.StdFrom(request.fullCity);
+            model.Password = PasswordHasher.Hash(model.Password);
             db.Cities.Add(model);
             db.SaveChanges();
             return Ok(model);
@@ -79,7 +80,7 @@ namespace pharmacyApi.Controllers
             if (Region == null) return NotFound(ID_NOT_FOUND);
             var entry = db.Cities.FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
-            var entryRegion = db.Regions.FirstOrDefault(x => x.Id == entry.RegionId);
+            var entryRegion = db.Regions.Include(x => x.Country).FirstOrDefault(x => x.Id == entry.RegionId);
             if (entryRegion == null) return NotFound(ID_NOT_FOUND);
             bool selfRedaction = Region == entryRegion;
             if (!AuthValidation.isValid(db, Region, request.authData, authType, selfRedaction) || 
@@ -114,10 +115,10 @@ namespace pharmacyApi.Controllers
         {
             var entry = db.Cities.Include(x => x.Region).ThenInclude(x => x.Country).FirstOrDefault(x => x.Id == id);
             if (entry == null) return NotFound(ID_NOT_FOUND);
-            var entryRegion = db.Cities.FirstOrDefault(x => x.Id == entry.RegionId);
+            var entryRegion = db.Regions.FirstOrDefault(x => x.Id == entry.RegionId);
             if (entryRegion == null) return NotFound(ID_NOT_FOUND);
             if (!AuthValidation.isValid(db, entryRegion, authData, authType)) return BadRequest(AUTH_FAILED);
-            return Ok(FullCity.fromStd(entry));
+            return Ok(FullCity.FromStd(entry));
         }
 
         public class CityRequest

@@ -5,7 +5,7 @@
         public string Description { get; set; }
         public int Count { get; set; }
 
-        public Pharmacy Pharmacy { get; set; }
+        public Pharmacy? Pharmacy { get; set; }
         public int PharmacyId { get; set; }
     }
 }
