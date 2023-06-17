@@ -28,7 +28,7 @@ namespace pharmacyApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("list")]
-        public IActionResult GetList([FromQuery] int pharmacyId = 0, [FromQuery] string strMedicament = "",
+        public IActionResult GetList([FromQuery] int pharmacyId = 0, [FromQuery] string medicamentName = "",
             [FromQuery] int cityId = 0, [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 2)
         {
             // Получение записей таблицы Medicament
@@ -41,8 +41,8 @@ namespace pharmacyApi.Controllers
             if (cityId != 0)
                 entries = entries.Where(x => x.Pharmacy.CityId == cityId);
             // Проверка на отбор по названию
-            if (strMedicament != "")
-                entries = entries.Where(x => x.Name.Contains(strMedicament));
+            if (medicamentName != "")
+                entries = entries.Where(x => x.Name.Contains(medicamentName));
 
             var fullSize = entries.Count();
             var pagesAmount = fullSize / pageSize + (fullSize % pageSize != 0 ? 1 : 0);
