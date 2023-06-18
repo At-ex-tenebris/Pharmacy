@@ -1,0 +1,9 @@
+<div [attr.class]="cssClassName" *ngIf="doesPanelVisible()">
+    <div class="admin-header-link" *ngFor="let link of links" 
+        [attr.style]="getStyle(link)" (click)="moveTo(link.ref)">
+        {{link.caption}}
+    </div>
+    <div class="admin-header-link" (click)="logout()" *ngIf="cssClassName == MAIN_HEADER_CLASS_NAME">
+        Выйти
+    </div>
+</div>

@@ -1,0 +1,12 @@
+.admin-header{
+    &-main{
+        display: flex;
+        justify-content: center;
+        border: 1px solid black;
+    }
+    &-link{
+        font-size: 34px;
+        font-family: Sans-Serif;
+        padding: 12px 34px;
+    }
+}
