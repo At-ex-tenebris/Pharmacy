@@ -37,6 +37,8 @@ export class TemplateService extends AuthorizedBaseService {
     }
     
     public addEntry(entry : City, authData: AuthData | null = null, authType : string = "") : Observable<City>{
+        if (authData == null) authData = this.authorizedToken?.authData ?? null;
+        if (authType == '') authType = this.authorizedToken?.authType ?? '';
         let url = `${this.CONTROLLER_URL}`;
         let headers = this.getTokenHeaders();
         let body = {authData : authData, fullCity : entry};
@@ -46,6 +48,8 @@ export class TemplateService extends AuthorizedBaseService {
     }
 
     public redactEntry(id : number, entry : City, authData: AuthData | null = null, authType : string = "") : Observable<City>{
+        if (authData == null) authData = this.authorizedToken?.authData ?? null;
+        if (authType == '') authType = this.authorizedToken?.authType ?? '';
         let url = `${this.CONTROLLER_URL}/${id}`;
         let headers = this.getTokenHeaders();
         let body = {authData : authData, fullCity : entry};
@@ -55,6 +59,8 @@ export class TemplateService extends AuthorizedBaseService {
     }
 
     public deleteEntry(id : number, authData: AuthData | null = null, authType : string = "") : Observable<City>{
+        if (authData == null) authData = this.authorizedToken?.authData ?? null;
+        if (authType == '') authType = this.authorizedToken?.authType ?? '';
         let url = `${this.CONTROLLER_URL}/${id}`;
         let headers = this.getTokenHeaders().append('Content-Type', 'application/json');
         let body = authData;
@@ -64,6 +70,8 @@ export class TemplateService extends AuthorizedBaseService {
     }
     
     public getInfo(id : number, authData: AuthData | null = null, authType : string = "") : Observable<City>{
+        if (authData == null) authData = this.authorizedToken?.authData ?? null;
+        if (authType == '') authType = this.authorizedToken?.authType ?? '';
         let url = `${this.CONTROLLER_URL}/${id}`;
         let headers = this.getTokenHeaders();
         let body = authData;
