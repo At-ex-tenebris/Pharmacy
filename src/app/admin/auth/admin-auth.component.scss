@@ -1,0 +1,12 @@
+.admin-auth{
+    &-form{
+        border: 1px solid black;
+        width: fit-content;
+        margin: auto;
+        padding: 12px;
+        margin-top: 23px;
+    }
+    &-line{
+        margin: 12px 0;
+    }
+}
