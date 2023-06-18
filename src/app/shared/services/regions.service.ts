@@ -52,6 +52,8 @@ export class RegionsService extends AuthorizedBaseService {
     authData: AuthData | null = null,
     authType: string = ''
   ): Observable<Region> {
+    if (authData == null) authData = this.authorizedToken?.authData ?? null;
+    if (authType == '') authType = this.authorizedToken?.authType ?? '';
     let url = `${this.CONTROLLER_URL}`;
     let headers = this.getTokenHeaders();
     let body = { authData: authData, fullRegion: entry };
@@ -69,6 +71,8 @@ export class RegionsService extends AuthorizedBaseService {
     authData: AuthData | null = null,
     authType: string = ''
   ): Observable<Region> {
+    if (authData == null) authData = this.authorizedToken?.authData ?? null;
+    if (authType == '') authType = this.authorizedToken?.authType ?? '';
     let url = `${this.CONTROLLER_URL}/${id}`;
     let headers = this.getTokenHeaders();
     let body = { authData: authData, fullRegion: entry };
@@ -85,6 +89,8 @@ export class RegionsService extends AuthorizedBaseService {
     authData: AuthData | null = null,
     authType: string = ''
   ): Observable<Region> {
+    if (authData == null) authData = this.authorizedToken?.authData ?? null;
+    if (authType == '') authType = this.authorizedToken?.authType ?? '';
     let url = `${this.CONTROLLER_URL}/${id}`;
     let headers = this.getTokenHeaders().append(
       'Content-Type',
@@ -108,6 +114,8 @@ export class RegionsService extends AuthorizedBaseService {
     authData: AuthData | null = null,
     authType: string = ''
   ): Observable<Region> {
+    if (authData == null) authData = this.authorizedToken?.authData ?? null;
+    if (authType == '') authType = this.authorizedToken?.authType ?? '';
     let url = `${this.CONTROLLER_URL}/${id}`;
     let headers = this.getTokenHeaders();
     let body = authData;
